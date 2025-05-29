@@ -17,6 +17,13 @@ O uso da IA foi fundamental para:
 - Resolver erros de compilação e lógica.
 - Aprender boas práticas de programação.
 
+## 🐞 Erro conhecido
+
+Atualmente, o jogo está com um **erro crítico**:  
+> Quando o jogador entra por uma porta aberta ao final da fase, o jogo **não avança para a próxima fase** como deveria.
+
+Esse problema está sendo analisado e planejamos corrigi-lo em versões futuras.
+
 ## ⏳ Tempo e aprendizado
 
 O desenvolvimento foi **demorado** e exigiu muita paciência e tentativa e erro. Ainda assim, foi uma **experiência incrível** e extremamente **educativa**, que nos ajudou a aprender muito mais do que esperávamos logo no início do curso.
