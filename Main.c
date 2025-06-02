@@ -608,19 +608,19 @@ void fase3() {
 
 // --------- Funções auxiliares ---------
 void mostrarTelaVitoria() { printf("Parabéns! Você venceu o jogo.\n"); }
-void mostrarCreditos() { printf("Créditos: Desenvolvido por Gabriel.\n"); }
-void sairDoJogo() { printf("\nObrigado por jogar Dungeon Crawler! Até logo.\n\n"); }
+void mostrarCreditos() { printf("\nCreditos: Desenvolvido por Gabriel e Rafael Chada.\n"); }
+void sairDoJogo() { printf("\nObrigado por jogar Dungeon Crawler! Ate logo.\n\n"); }
 
 // --------- Menu principal ---------
 int main() {
     int opcao;
 
     while (1) {
-        printf("Escolha uma opção:\n");
+        printf("Escolha uma opçao:\n");
         printf("1 - Jogar\n");
-        printf("2 - Créditos\n");
+        printf("2 - Creditos\n");
         printf("3 - Sair\n");
-        printf("Digite sua opção: ");
+        printf("Digite sua opçao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
