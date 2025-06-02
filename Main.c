@@ -4,17 +4,20 @@
 #include <conio.h>
 #include <windows.h>
 
-
 #define VILA 15
 #define FASE1 20
 #define FASE2 20
-// VILA 
+#define FASE3 40
+
+// Funcoes da vila
 char vila[VILA][VILA];
 int px, py;
 boolean comChave = 0;
+
 // fase 1
 char faseUm[FASE1][FASE1];
 int px_fase1, py_fase1;
+
 // fase 2-----------------------
 char fase2_mapa[FASE2][FASE2];
 int fase2_jogadorX, fase2_jogadorY;
@@ -22,7 +25,20 @@ int fase2_vidas = 3;
 int fase2_chaveColetada = 0;
 int fase2_monstroX, fase2_monstroY;
 
-// Funcoes da vila
+// FASE 3 ----------------------------------
+char fase3_mapa[FASE3][FASE3];
+int fase3_jogadorX, fase3_jogadorY;
+int fase3_vidas = 3;
+int fase3_chaveColetada = 0;
+int fase3_monstroX, fase3_monstroY;
+
+// Posições dos teletransportes
+int tp1_x = 20, tp1_y = 12;
+int tp2_x = 30, tp2_y = 5;
+
+
+
+// VILA -----------------
 
 
 void inicializaMapa() {
@@ -114,7 +130,8 @@ boolean vilaPrincipal() {
         imprimeMapa(); // Exibe o mapa da vila
         comando = getch(); // Captura o comando do jogador
 
-        if (tolower(comando) == 'p') {
+        if (tolower(comando) == 'q') {
+            printf("Você saiu do jogo.\n");
             return 1; // Sai do jogo
         }
 
@@ -124,12 +141,13 @@ boolean vilaPrincipal() {
         if (vila[px][py] == '=') {
             printf("Você entrou na porta e avançou para a fase 1!\n");
             getch();
-        
             return 1; // Avança para a fase 1
         }
     }
 }
-//---------------------------------------- FASE 1//
+
+// FASE 1 -=------------------------
+
 
 
 void inicializaFase1() {
@@ -219,7 +237,7 @@ void fase1() {
         imprimeFase1();
         comando = getch();
 
-        if (tolower(comando) == 'p') break;
+        if (tolower(comando) == 'q') break;
 
         moverJogadorFase1(comando);
 
@@ -231,15 +249,7 @@ void fase1() {
     }
 }
 
-
-
-
-
-
-
-
-// --------- Funções da Fase 2 -------------------------------------------------------------------------
-
+// FASE 2 -------------------
 
 int fase2_verificaColisao() {
     // Verifica se o jogador está sobre um espinho
@@ -324,7 +334,7 @@ void fase2_imprimeMapa() {
         }
         printf("\n");
     }
-    printf("\ntantes: %d\n", fase2_vidas);
+    printf("\nVidas restantes: %d\n", fase2_vidas);
 }
 
 void fase2_moveJogador(char movimento) {
@@ -408,10 +418,197 @@ void fase2() {
 }
 }
 
+
+
+
+
+int fase3_verificaColisao() {
+    if (fase3_mapa[fase3_jogadorX][fase3_jogadorY] == '#') {
+        printf("\nVocê pisou em um espinho! -1 vida\n");
+        fase3_vidas--;
+        Sleep(1000);
+        return 1;
+    }
+
+    if (fase3_jogadorX == fase3_monstroX && fase3_jogadorY == fase3_monstroY) {
+        printf("\nO monstro te pegou! -1 vida\n");
+        fase3_vidas--;
+        Sleep(1000);
+        return 1;
+    }
+
+    return  0;
+}
+
+void fase3_moverMonstro() {
+    int dir = rand() % 4;
+    int novoX = fase3_monstroX;
+    int novoY = fase3_monstroY;
+
+    if (dir == 0) novoX--;
+    if (dir == 1) novoX++;
+    if (dir == 2) novoY--;
+    if (dir == 3) novoY++;
+
+    if (novoX < 0 || novoX >= FASE3 || novoY < 0 || novoY >= FASE3) return;
+
+    if (fase3_mapa[novoX][novoY] == ' ' || fase3_mapa[novoX][novoY] == '&') {
+        fase3_mapa[fase3_monstroX][fase3_monstroY] = ' ';
+        fase3_monstroX = novoX;
+        fase3_monstroY = novoY;
+        fase3_mapa[fase3_monstroX][fase3_monstroY] = 'V';
+    }
+}
+
+void fase3_inicializaMapa() {
+    for (int i = 0; i < FASE3; i++)
+        for (int j = 0; j < FASE3; j++)
+            fase3_mapa[i][j] = ' ';
+
+    for (int i = 0; i < FASE3; i++) {
+        fase3_mapa[0][i] = '*';
+        fase3_mapa[FASE3 - 1][i] = '*';
+        fase3_mapa[i][0] = '*';
+        fase3_mapa[i][FASE3 - 1] = '*';
+    }
+
+    fase3_jogadorX = 1;
+    fase3_jogadorY = 1;
+    fase3_mapa[fase3_jogadorX][fase3_jogadorY] = '&';
+
+    fase3_mapa[15][5] = '#';
+    fase3_mapa[13][5] = '#';
+    fase3_mapa[11][5] = '#';
+    fase3_mapa[10][5] = '#';
+    fase3_mapa[17][32] = '#';
+    fase3_mapa[16][17] = '#';
+    fase3_mapa[32][3] = '#';
+    fase3_mapa[16][31] = '#';
+    fase3_mapa[27][23] = '#';
+    fase3_mapa[32][15] = '#';
+    fase3_mapa[32][14] = '#';
+    fase3_mapa[22][6] = '#';
+    fase3_mapa[22][4] = '#';
+    fase3_mapa[5][5] = '#';
+    fase3_mapa[8][3] = '#';
+    fase3_mapa[12][12] = '#';
+    fase3_mapa[6][14] = '#';
+    fase3_mapa[15][2] = '#';
+
+    fase3_mapa[30][32] = 'V';
+    fase3_monstroX = 30;
+    fase3_monstroY = 32;
+
+    fase3_mapa[15][7] = '@';
+    fase3_mapa[26][36] = 'D';
+
+    // Adiciona os dois pontos de teletransporte
+    fase3_mapa[tp1_x][tp1_y] = '>';
+    fase3_mapa[tp2_x][tp2_y] = '>';
+}
+
+void fase3_imprimeMapa() {
+    for (int i = 0; i < FASE3; i++) {
+        for (int j = 0; j < FASE3; j++) {
+            printf("%c ", fase3_mapa[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\nVidas restantes: %d\n", fase3_vidas);
+}
+
+void fase3_moveJogador(char movimento) {
+    int novoX = fase3_jogadorX;
+    int novoY = fase3_jogadorY;
+
+    if (movimento == 'w') novoX--;
+    if (movimento == 's') novoX++;
+    if (movimento == 'a') novoY--;
+    if (movimento == 'd') novoY++;
+
+    char destino = fase3_mapa[novoX][novoY];
+
+    if (destino == '*') return;
+
+    if (destino == '#') {
+        fase3_vidas--;
+        printf("Você tocou em um espinho! -1 vida\n");
+        Sleep(500);
+        return;
+    }
+
+    if (destino == '@') {
+        fase3_chaveColetada = 1;
+        fase3_mapa[4][4] = ' ';
+        fase3_mapa[26][36] = '=';
+        printf("Você pegou a chave! A porta foi aberta.\n");
+        Sleep(1000);
+    }
+
+    if (destino == 'D') {
+        printf("A porta está trancada. Pegue a chave!\n");
+        Sleep(1000);
+        return;
+    }
+
+    if (destino == '=') {
+        printf("Você passou pela porta!\n");
+        Sleep(1000);
+        return;
+    }
+
+    if (destino == '>') {
+        printf("Teletransporte ativado!\n");
+        Sleep(500);
+        fase3_mapa[fase3_jogadorX][fase3_jogadorY] = ' ';
+
+        if (novoX == tp1_x && novoY == tp1_y) {
+            fase3_jogadorX = tp2_x;
+            fase3_jogadorY = tp2_y;
+        } else {
+            fase3_jogadorX = tp1_x;
+            fase3_jogadorY = tp1_y;
+        }
+
+        fase3_mapa[fase3_jogadorX][fase3_jogadorY] = '&';
+        return;
+    }
+
+    fase3_mapa[fase3_jogadorX][fase3_jogadorY] = ' ';
+    fase3_jogadorX = novoX;
+    fase3_jogadorY = novoY;
+    fase3_mapa[fase3_jogadorX][fase3_jogadorY] = '&';
+}
+
+void fase3() {
+    fase3_vidas = 3;
+    fase3_chaveColetada = 0;
+    fase3_inicializaMapa();
+
+    while (fase3_vidas > 0) {
+        system("cls");
+        fase3_imprimeMapa();
+
+        char comando = _getch();
+        if (comando == 'w' || comando == 'a' || comando == 's' || comando == 'd') {
+            fase3_moveJogador(comando);
+        }
+
+        fase3_moverMonstro();
+
+        if (fase3_verificaColisao()) {
+            if (fase3_vidas > 0) {
+                printf("Reiniciando a fase...\n");
+                Sleep(1000);
+                fase3_inicializaMapa();
+            }
+        }
+    }
+}
+
 // --------- Funções auxiliares ---------
-void fase3() {}
 void mostrarTelaVitoria() { printf("Parabéns! Você venceu o jogo.\n"); }
-void mostrarCreditos() { printf("\n \n Creditos: Desenvolvido por Gabriel Lima e Rafael Chada .\n"); }
+void mostrarCreditos() { printf("Créditos: Desenvolvido por Gabriel.\n"); }
 void sairDoJogo() { printf("\nObrigado por jogar Dungeon Crawler! Até logo.\n\n"); }
 
 // --------- Menu principal ---------
@@ -421,19 +618,18 @@ int main() {
     while (1) {
         printf("Escolha uma opção:\n");
         printf("1 - Jogar\n");
-        printf("2 - Creditos\n");
+        printf("2 - Créditos\n");
         printf("3 - Sair\n");
         printf("Digite sua opção: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
             case 1: 
-              if (vilaPrincipal()) { // Joga a vila e avança para a fase 1
-                    fase1();
-                    fase2();
-                    fase3();
-                    mostrarTelaVitoria();
-                }
+                vilaPrincipal();
+                fase1();
+                fase2();
+                fase3();
+                mostrarTelaVitoria();
                 break;
             case 2:
                 mostrarCreditos();
@@ -444,6 +640,6 @@ int main() {
             default:
                 printf("Opção inválida.\n");
                 break;
-        }
+    }
     }
 }
